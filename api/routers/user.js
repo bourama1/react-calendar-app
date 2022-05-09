@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const router = new express.Router();
 const bcrypt = require("bcryptjs");
-const authenticate = require("../../middleware/authenticate");
+const authenticate = require("../middleware/authenticate");
 
 router.post("/api/user/create", async (req, res)=> {
     if (!req.body.project) {
@@ -42,7 +42,7 @@ router.get("/api/users", authenticate, (req, res)=>{
     User.find({}).then((users)=> res.send(users));
 });
 
-router.post("/logout", authenticate, (req, res)=>{
+router.post("/api/logout", authenticate, async (req, res)=>{
     req.session.user_id = null;
     res.send({message: "Logout successful"});
 });

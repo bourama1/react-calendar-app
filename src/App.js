@@ -1,70 +1,69 @@
-import React, {useState, useEffect} from "react";
-import "./App.css";
-import {Calendar, dateFnsLocalizer} from "react-big-calendar";
-import format from "date-fns/format";
-import parse from "date-fns/parse";
-import startOfWeek from "date-fns/startOfWeek";
-import getDay from "date-fns/getDay";
-import DatePicker from "react-datepicker";
-import useFetch from "use-http";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-datepicker/dist/react-datepicker.css";
-
-const locales = {
-    "en-US": require("date-fns/locale/en-US"),
-};
-
-const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-});
+import {Route, Routes} from "react-router";
+import {BrowserRouter} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import About from "./Components/About";
+import Nav from "./Components/Nav";
+import Tasks from "./Components/Tasks";
+import Footer from "./Components/Footer";
+import Registration from "./Components/Registration";
+import Login from "./Components/Login";
+import Role from "./Components/Role";
+import Project from "./Components/Project";
+import {MDBContainer, MDBRow} from "mdb-react-ui-kit";
 
 function App() {
-    const [newEvent, setNewEvent] = useState({title: "", start: "", end: ""});
-    const [allEvents, setAllEvents] = useState([]);
-    const {get, post, response, loading, error} = useFetch("http://localhost:3000");
+    const [token, setToken] = useState();
+    const [user, setUser] = useState();
 
-    useEffect(() => {
-        loadInitialEvents();
-    }, []); // componentDidMount
+    useEffect(()=>{
+        const getToken = async ()=> {
+            const tokenRequest = await fetch("/api/me/token").then((data)=> data.json()).catch("User is not logged");
+            tokenRequest&& await fetch("/api/me").then((data)=> data.json()).then((user) => setUser(user));
+            setToken(tokenRequest.token);
+        };
 
-    async function loadInitialEvents() {
-        const initialEvents = await get("/events");
-        if (response.ok) setAllEvents(initialEvents);
+        getToken().catch((err)=> console.log(err));
+    }, []);
+
+    const isAdmin = user&&user.name==="Administrator";
+
+
+    if (!token) {
+        return <MDBContainer>
+            <MDBRow>
+                <BrowserRouter>
+                    <Nav role="navigation" setToken={setToken} loginToken={token}/>
+                    <Routes>
+                        <Route path="/" element={<Login setToken={setToken} setUser={setUser}/>}/>
+                        <Route path="/registration" element={<Registration/>}/>
+                        <Route path="/login" element={<Login setToken={setToken} setUser={setUser}/>}/>
+                    </Routes>
+                </BrowserRouter>
+            </MDBRow>
+
+            <Footer/>
+        </MDBContainer>;
     }
 
-    async function addEvent() {
-        const newEventPost = await post("/events", newEvent);
-        if (response.ok) setAllEvents([...allEvents, newEventPost]);
-    }
 
     return (
-        <div className="App">
-            <h1>Calendar</h1>
-            <h2>Add event</h2>
-            <div>
-                <input type="text" placeholder="Title" style={{width: "20%", marginRight: "10px"}}
-                    value={newEvent.title} onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
-                />
-                <DatePicker placeholderText="Start date" style={{marginRight: "10px"}}
-                    selected={newEvent.start} onChange={(start) => setNewEvent({...newEvent, start})}
-                />
-                <DatePicker placeholderText="End date"
-                    selected={newEvent.end} onChange={(end) => setNewEvent({...newEvent, end})}
-                />
-                <button style={{marginTop: "10px"}} onClick={addEvent}>
-          Add event
-                </button>
-                {error && "Error!"}
-                {loading && "Loading..."}
-            </div>
-            <Calendar localizer={localizer} events={allEvents}
-                startAccessor='start' endAccessor='end' style={{height: 500, margin: "50px"}} />
-        </div>
+        <MDBContainer>
+            <MDBRow>
+                <BrowserRouter>
+                    <Nav loginToken={token} setToken={setToken} userId={token} isAdmin={isAdmin}/>
+                    <Routes>
+                        <Route path="/" element={<About/>}/>
+                        <Route path="/tasks" element={<Tasks userId={token}/>}/>
+                        {isAdmin&&<Route path="/role" element={<Role user={user} setUser={setUser}/>}/>}
+                        {isAdmin&&<Route path="/project" element={<Project/>}/>}
+                    </Routes>
+                </BrowserRouter>
+            </MDBRow>
+
+            <Footer/>
+        </MDBContainer>
     );
 }
+
 
 export default App;

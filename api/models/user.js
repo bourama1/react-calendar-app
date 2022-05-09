@@ -1,6 +1,6 @@
 // User scheme
 const mongoose = require("mongoose");
-const userSchema = new mongoose.Schema({name: {type: String, unique: true, required: true}, password: {type: String, required: true, minlength: 7}, projects: [String]});
+const userSchema = new mongoose.Schema({name: {type: String, unique: true, required: true}, password: {type: String, required: true, minlength: 8}, projects: [String]});
 const bcrypt = require("bcryptjs");
 
 

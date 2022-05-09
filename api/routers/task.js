@@ -1,7 +1,7 @@
 const express = require("express");
 const router = new express.Router();
 const Task = require("../models/task");
-const authenticate = require("../../middleware/authenticate");
+const authenticate = require("../middleware/authenticate");
 
 router.post("/api/task/create", authenticate, (req, res)=> {
     const task = new Task(req.body);

@@ -2,7 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
 const Project = require("../models/project");
-const authenticate = require("../../middleware/authenticate");
+const authenticate = require("../middleware/authenticate");
 
 
 router.post("/api/project/create", authenticate, (req, res)=> {
