@@ -8,6 +8,7 @@ import getDay from "date-fns/getDay";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 import {MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit";
+import UpdateTask from "./UpdateTask";
 
 const locales = {
     "en-US": require("date-fns/locale/en-US"),
@@ -23,6 +24,7 @@ const localizer = dateFnsLocalizer({
 
 const MyCalendar = ({userId}) => {
     const [tasks, setTasks] = useState([]);
+    const [taskUpdate, setTaskUpdate] = useState(null);
 
     const fetchData = async () => {
         const fetchedUser = await fetch(`/api/users/${userId}`).then((data) => data.json());
@@ -40,11 +42,28 @@ const MyCalendar = ({userId}) => {
         fetchData().catch((error) => console.log(error));
     }, []);
 
+    const handleEditedTaskSubmit = async (task)=>{
+        await fetch(`/api/tasks/${task._id}/update`, {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(task),
+        });
+    };
+
+    const handleModalClose =()=>{
+        setTaskUpdate(null);
+    };
+
     return (
         <MDBCardBody>
+            {Boolean(taskUpdate)&&<UpdateTask onSubmit={handleEditedTaskSubmit} onClose={handleModalClose} isModalOpen={Boolean(taskUpdate)} task={taskUpdate} />}
             <MDBCardTitle>Calendar</MDBCardTitle>
-            <Calendar localizer={localizer} events={tasks}
-                startAccessor='start' endAccessor='end' style={{height: 500, margin: "50px"}} />
+            <Calendar localizer={localizer}
+                events={tasks}
+                onSelectEvent={(event) => setTaskUpdate(event)}
+                startAccessor='start'
+                endAccessor='end'
+                style={{height: 500, margin: "50px"}} />
         </MDBCardBody>
     );
 };
