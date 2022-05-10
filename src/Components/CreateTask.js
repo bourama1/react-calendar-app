@@ -1,14 +1,22 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
-import Modal from "react-modal";
 import {useForm} from "react-hook-form";
+import styled from "styled-components";
 import React, {useEffect, useState} from "react";
-import {MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit";
+import {MDBBtn, MDBCardBody, MDBCardTitle, MDBCol} from "mdb-react-ui-kit";
 
-Modal.setAppElement("#root");
+const Input = styled.input`
+width: 100%;
+padding: 8px 12px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+`;
 
-const CreateTask = ({isModalOpen, closeModal, userId}) =>{
-    const {register, handleSubmit, formState: {errors}, reset} = useForm();
+const CreateTask = ({userId}) =>{
+    const {register, handleSubmit, formState: {errors}} = useForm();
     const [projects, setProjects] = useState();
 
 
@@ -23,25 +31,19 @@ const CreateTask = ({isModalOpen, closeModal, userId}) =>{
         fetchData().catch((error) => console.log(error));
     }, []);
 
-
-    const handleClose = ()=>{
-        reset();
-        closeModal();
-    };
-
     const handleCreateTask= async (task)=>{
         task.isCompleted=false;
-        await fetch("/api/task/create", {
+        const response = await fetch("/api/task/create", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(task),
-        });
+        }).then((response) => response.json());
+        alert(response.message);
     };
 
     const onSubmit = (data) =>{
-        handleCreateTask(data).then((response)=> console.log(response.express));
+        handleCreateTask(data);
         console.log(JSON.stringify(data));
-        handleClose();
     };
 
 
@@ -49,31 +51,30 @@ const CreateTask = ({isModalOpen, closeModal, userId}) =>{
         <>
             <MDBCardBody className={"registration"}>
                 <MDBCardTitle>Create task</MDBCardTitle>
-                <form className={"create-modal"} onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <label>Task name: </label>
-                    <input placeholder={"Name"} {...register("name", {required: true})} />
-                    {errors.name?.type==="required"&&<p className={"validation-message"}>Name is required</p>}
+                    <Input placeholder={"Name"} {...register("name", {required: true})} />
+                    {errors.name?.type==="required"&&<MDBCol className={"validation-message"}>Name is required</MDBCol>}
                     <label>For project: </label>
                     <select type={"text"} {...register("project", {required: true})}>
                         <option value={""}> </option>
                         {projects&&projects.map((project)=> <option value={project._id}>{project.name}</option>)}
                     </select>
-                    {errors.project?.type==="required" &&<p className={"validation-message"} >You have to choose the project</p>}
+                    {errors.project?.type==="required" &&<MDBCol className={"validation-message"} >You have to choose the project</MDBCol>} <br></br>
                     <label>Importance: </label>
                     <select type={"text"} {...register("importance")}>
                         <option value="A">A </option>
                         <option value="B">B </option>
                         <option value="C">C </option>
                         <option value="D">D </option>
-                    </select>
+                    </select> <br></br>
                     <label>Description: </label>
-                    <textarea placeholder={"Description"} {...register("description", {required: true})}/>
-                    {errors.description?.type==="required" &&<p className={"validation-message"}>Description is required</p>}
+                    <Input placeholder={"Description"} {...register("description", {required: true})}/>
+                    {errors.description?.type==="required" &&<MDBCol className={"validation-message"}>Description is required</MDBCol>} <br></br>
                     <label>Deadline: </label>
-                    <input type={"date"} min={new Date().toISOString().slice(0, 10)} {...register("deadline", {required: true})} />
-                    {errors.deadline?.type==="required" &&<p className={"validation-message"}>You have to choose the deadline</p>}
-                    <button className={"modal-buttons"} type={"submit"}>submit</button>
-                    <button className={"modal-buttons"} onClick={handleClose}>close</button>
+                    <Input type={"date"} min={new Date().toISOString().slice(0, 10)} {...register("deadline", {required: true})} />
+                    {errors.deadline?.type==="required" &&<MDBCol className={"validation-message"}>You have to choose the deadline</MDBCol>}
+                    <MDBBtn type={"submit"}>Submit</MDBBtn>
                 </form>
             </MDBCardBody>
         </>

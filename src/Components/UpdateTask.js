@@ -1,12 +1,22 @@
 /* eslint-disable react/prop-types */
-import Modal from "react-modal";
 import {useForm} from "react-hook-form";
 import React, {useState} from "react";
+import {MDBBtn, MDBCol, MDBCardBody, MDBCardTitle, MDBRow} from "mdb-react-ui-kit";
+import styled from "styled-components";
 
-const TaskModal = ({isModalOpen, onClose, onSubmit, task})=>{
+const Input = styled.input`
+width: 100%;
+padding: 8px 12px;
+margin: 8px 0;
+display: inline-block;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+`;
+
+export default function UpdateTask({isModalOpen, onClose, onSubmit, task}) {
     const [editedTask, setEditedTask] = useState(task);
     const {register, handleSubmit, formState: {errors}, reset} = useForm();
-
 
     const handleClose=()=>{
         reset();
@@ -30,40 +40,43 @@ const TaskModal = ({isModalOpen, onClose, onSubmit, task})=>{
         }
     };
 
-    const onModalSubmit = ()=>{
+    const onUpdateSubmit = async () => {
         handleSubmit(onSubmit(editedTask));
         handleClose();
     };
 
     return (
-        <Modal isOpen={isModalOpen}>
-            <h2>Update task: {editedTask.name}</h2>
-            <form className={"create-modal"} onChange={handleChange} onSubmit={onModalSubmit}>
+        <MDBCardBody>
+            <MDBCardTitle>Update task: {editedTask.name}</MDBCardTitle>
+            <form onChange={handleChange} onSubmit={onUpdateSubmit}>
                 <label>Change importance: </label>
                 <select type={"text"} value={editedTask.importance} {...register("importance")}>
                     <option value="A">A </option>
                     <option value="B">B </option>
                     <option value="C">C </option>
                     <option value="D">D </option>
-                </select>
+                </select> <br></br>
                 <label>Description: </label>
-                <textarea placeholder={"Description"} value={editedTask.description} {...register("description", {required: true})}/>
-                {errors.description?.type==="required" &&<p className={"validation-message"}>Description is required</p>}
+                <Input placeholder={"Description"} value={editedTask.description} {...register("description", {required: true})}/>
+                {errors.description?.type==="required" &&<MDBCol className={"validation-message"}>Description is required</MDBCol>} <br></br>
                 <label>Deadline: </label>
-                <input type={"date"} value={editedTask.deadline} {...register("deadline", {required: true})} />
-                {errors.deadline?.type==="required" &&<p className={"validation-message"}>You have to choose the deadline</p>}
-                <label>Complete task</label>
+                <Input type={"date"} value={editedTask.deadline} {...register("deadline", {required: true})} />
+                {errors.deadline?.type==="required" &&<MDBCol className={"validation-message"}>You have to choose the deadline</MDBCol>} <br></br>
+                <label>Complete task: </label>
                 <select type={"text"} value={editedTask.isCompleted === "true"} {...register("isCompleted", {required: true})}>
                     <option value={true}>Yes</option>
                     <option value={false}>No</option>
-                </select>
-
-                <button type={"submit"}>submit</button>
-                <button onClick={handleClose}>close</button>
+                </select> <br></br>
+                <MDBRow center>
+                    <MDBCol>
+                        <MDBBtn type={"submit"}>Submit</MDBBtn>
+                    </MDBCol>
+                    <MDBCol>
+                        <MDBBtn onClick={handleClose}>close</MDBBtn>
+                    </MDBCol>
+                </MDBRow>
             </form>
-        </Modal>
+        </MDBCardBody>
 
     );
-};
-
-export default TaskModal;
+}

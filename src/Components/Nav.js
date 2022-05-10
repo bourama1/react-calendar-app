@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, {useState} from "react";
+import React from "react";
 import {useNavigate} from "react-router-dom";
 import "../css/Main.css";
-import CreateTask from "./CreateTask";
 import {
     MDBContainer,
     MDBNavbar,
@@ -13,7 +12,6 @@ import {
 } from "mdb-react-ui-kit";
 
 const Nav = ({setToken, loginToken, userId, isAdmin})=> {
-    const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
 
     return (
@@ -22,8 +20,6 @@ const Nav = ({setToken, loginToken, userId, isAdmin})=> {
             <MDBNavbar fixed='top' expand='lg' dark bg="dark" className="py-4">
                 <MDBContainer size="md" fluid>
 
-                    {modalOpen&&<CreateTask userId={userId} isModalOpen={modalOpen} closeModal={()=>setModalOpen(false)} />}
-
                     <MDBCollapse navbar>
                         <MDBNavbarNav className='me-auto mb-2 mb-lg-0'>
                             {loginToken && <>
@@ -31,16 +27,19 @@ const Nav = ({setToken, loginToken, userId, isAdmin})=> {
                                     <MDBBtn rounded outline className="px-3 me-2" onClick={()=> navigate("/")}>About</MDBBtn>
                                 </MDBNavbarItem>
                                 <MDBNavbarItem>
-                                    <MDBBtn rounded outline className="px-3 me-2" onClick={()=> navigate("/Tasks")}>Tasks</MDBBtn>
+                                    <MDBBtn rounded outline className="px-3 me-2" onClick={()=> navigate("/tasks")}>Tasks</MDBBtn>
                                 </MDBNavbarItem>
                                 <MDBNavbarItem>
-                                    {isAdmin&&<MDBBtn rounded outline className="px-3 me-2" onClick={()=> navigate("/Role")}>Role</MDBBtn>}
+                                    {isAdmin&&<MDBBtn rounded outline className="px-3 me-2" onClick={()=> navigate("/role")}>Role</MDBBtn>}
                                 </MDBNavbarItem>
                                 <MDBNavbarItem>
-                                    {isAdmin&&<MDBBtn rounded outline className="px-3 me-2" onClick={()=> navigate("/Project")}>Project</MDBBtn>}
+                                    {isAdmin&&<MDBBtn rounded outline className="px-3 me-2" onClick={()=> navigate("/project")}>Project</MDBBtn>}
                                 </MDBNavbarItem>
                                 <MDBNavbarItem>
-                                    <MDBBtn rounded outline className="px-3 me-2" onClick={() => setModalOpen(true)}><a>Create</a></MDBBtn>
+                                    <MDBBtn rounded outline className="px-3 me-2" onClick={() => navigate("/createTask")}>Create Task</MDBBtn>
+                                </MDBNavbarItem>
+                                <MDBNavbarItem>
+                                    <MDBBtn rounded outline className="px-3 me-2" onClick={() => navigate("/calendar")}>Calendar</MDBBtn>
                                 </MDBNavbarItem>
                             </>
                             }

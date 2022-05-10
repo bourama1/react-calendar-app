@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import React, {useEffect, useState} from "react";
-import {MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit";
+import {MDBBtn, MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit";
 
 const Role = () => {
     const [users, setUsers] = useState();
@@ -46,28 +46,26 @@ const Role = () => {
     return (
         <MDBCardBody className={"page-center"}>
             <MDBCardTitle color="mdb-color darken-2">Manage users on project</MDBCardTitle>
-            <div className={"role-line"}>
-                <label>User name</label>
-                <select onChange={(e) => {
-                    setUser(e.target.value);
-                }}>
-                    <option value={""}></option>
-                    {users&&users.map((user)=><option value={user._id}>{user.name}</option>)}
-                </select>
-                <label>Project</label>
-                <select onChange={(e)=> setProject(e.target.value)}>
-                    <option value={""}></option>
-                    {availableProjects&&availableProjects.map((project)=><option value={project._id}>{project.name}</option>)}
-                </select>
-                <label>Action:</label>
-                <select onChange={(e)=> setAction(e.target.value)}>
-                    <option value={""}></option>
-                    <option value={"Add"}>Add</option>
-                    <option value={"Remove"}>Del</option>
-                </select>
+            <label>User name: </label>
+            <select onChange={(e) => {
+                setUser(e.target.value);
+            }}>
+                <option value={""}></option>
+                {users&&users.map((user)=><option value={user._id}>{user.name}</option>)}
+            </select> <br></br>
+            <label>Project: </label>
+            <select onChange={(e)=> setProject(e.target.value)}>
+                <option value={""}></option>
+                {availableProjects&&availableProjects.map((project)=><option value={project._id}>{project.name}</option>)}
+            </select> <br></br>
+            <label>Action: </label>
+            <select onChange={(e)=> setAction(e.target.value)}>
+                <option value={""}></option>
+                <option value={"Add"}>Add</option>
+                <option value={"Remove"}>Del</option>
+            </select> <br></br>
 
-                <button className={"designed-buttons"} onClick={handleSubmit}>Submit</button>
-            </div>
+            <MDBBtn onClick={handleSubmit}>Submit</MDBBtn>
         </MDBCardBody>
     );
 };

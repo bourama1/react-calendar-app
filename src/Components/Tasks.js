@@ -1,9 +1,8 @@
-/* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import TaskModal from "./TaskModal";
-import {MDBBtn, MDBCardBody, MDBCol, MDBCardTitle} from "mdb-react-ui-kit";
+import {MDBBtn, MDBCardBody, MDBCol, MDBCardTitle, MDBTable, MDBTableHead, MDBTableBody} from "mdb-react-ui-kit";
+import UpdateTask from "./UpdateTask";
 
 
 const Input = styled.input`
@@ -12,15 +11,9 @@ height: 30px;
 margin-right: 10px;
 `;
 
-const Table = styled.table`
-width: 1000px;
-
-`;
-
-
 const Tasks = ({userId}) => {
     const [tasks, setTasks] = useState(null);
-    const [modalTask, setModalTask] = useState(null);
+    const [taskUpdate, setTaskUpdate] = useState(null);
     const [filteredTasks, setFilteredTasks] = useState();
     const [projects, setProjects] = useState();
 
@@ -51,7 +44,7 @@ const Tasks = ({userId}) => {
     };
 
     const handleModalClose =()=>{
-        setModalTask(null);
+        setTaskUpdate(null);
     };
 
     const handleTaskDelete = async (task)=>{
@@ -85,11 +78,11 @@ const Tasks = ({userId}) => {
 
     return (
         <MDBCardBody className={"page-center"}>
-            {Boolean(modalTask)&&<TaskModal onSubmit={handleEditedTaskSubmit} onClose={handleModalClose} isModalOpen={Boolean(modalTask)} task={modalTask} />}
+            {Boolean(taskUpdate)&&<UpdateTask onSubmit={handleEditedTaskSubmit} onClose={handleModalClose} isModalOpen={Boolean(taskUpdate)} task={taskUpdate} />}
             <MDBCardTitle color="mdb-color darken-2">Filters</MDBCardTitle>
             <TaskFilter onSearch={(criteria)=> handleSearch(criteria)}/>
             <MDBCardTitle color="mdb-color darken-2">Tasks</MDBCardTitle>
-            <TaskTable projects={projects} tasks={filteredTasks} setModalTask={setModalTask} handleDelete={handleTaskDelete} />
+            <TaskTable projects={projects} tasks={filteredTasks} handleUpdate={setTaskUpdate} handleDelete={handleTaskDelete} />
         </MDBCardBody>);
 };
 
@@ -109,22 +102,28 @@ const TaskFilter = ({onSearch}) => {
                 <label>Task name: </label>
                 <Input type={"text"} name={"taskName"} value={taskName} onChange={(e)=> setTaskName(e.target.value)}/>
                 <label>Importance: </label>
-                <Input type={"text"} name={"taskImportance"} value={importance} onChange={(e)=> setImportance(e.target.value)}/>
+                <select type={"text"} name={"taskImportance"} value={importance} onChange={(e)=> setImportance(e.target.value)}>
+                    <option value=""></option>
+                    <option value="A">A </option>
+                    <option value="B">B </option>
+                    <option value="C">C </option>
+                    <option value="D">D </option>
+                </select>
                 <label>Hide done: </label>
                 <input type={"checkbox"} name={"hideDone"} value={hideDone} onChange={(e)=> {
                     setHideDone(!hideDone);
                 }}/>
             </MDBCol>
             <br></br>
-            <MDBBtn className={"designed-buttons"} onClick={handleSearch}>Search</MDBBtn>
+            <MDBBtn onClick={handleSearch}>Search</MDBBtn>
         </MDBCardBody>
     );
 };
 
-const TaskTable = ({tasks, setModalTask, handleDelete, projects})=>{
+const TaskTable = ({tasks, handleUpdate, handleDelete, projects})=>{
     const Task = ({task}) => {
         return (
-            <tr>
+            <tr key={task._id}>
                 <td>
                     {task.name}
                 </td>
@@ -141,10 +140,10 @@ const TaskTable = ({tasks, setModalTask, handleDelete, projects})=>{
                     {task.isCompleted==="true"?"Completed":"Uncompleted"}
                 </td>
                 <td>
-                    <button className={"designed-buttons"} onClick={() => setModalTask(task)}>View</button>
+                    <MDBBtn onClick={() => handleUpdate(task)}>View</MDBBtn>
                 </td>
                 <td>
-                    <button className={"designed-buttons"} onClick={() =>handleDelete(task)}>Delete</button>
+                    <MDBBtn onClick={() => handleDelete(task)}>Delete</MDBBtn>
                 </td>
             </tr>
         );
@@ -152,20 +151,22 @@ const TaskTable = ({tasks, setModalTask, handleDelete, projects})=>{
 
 
     return (
-        <Table>
-            <thead>
+        <MDBTable>
+            <MDBTableHead>
                 <tr>
                     <td>Task</td>
                     <td>Importance</td>
                     <td>Deadline</td>
                     <td>Project</td>
                     <td>State</td>
+                    <td>Actions</td>
+                    <td></td>
                 </tr>
-            </thead>
-            <tbody>
-                {tasks&&projects&&tasks.map((task)=><Task task={task}/>)}
-            </tbody>
-        </Table>
+            </MDBTableHead>
+            <MDBTableBody>
+                {tasks&&projects&&tasks.map((task)=><Task key={task.id} task={task}/>)}
+            </MDBTableBody>
+        </MDBTable>
     );
 };
 

@@ -1,5 +1,4 @@
 import {Route, Routes} from "react-router";
-import {BrowserRouter} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import About from "./Components/About";
 import Nav from "./Components/Nav";
@@ -9,7 +8,9 @@ import Registration from "./Components/Registration";
 import Login from "./Components/Login";
 import Role from "./Components/Role";
 import Project from "./Components/Project";
+import CreateTask from "./Components/CreateTask";
 import {MDBContainer, MDBRow} from "mdb-react-ui-kit";
+import MyCalendar from "./Components/Calendar";
 
 function App() {
     const [token, setToken] = useState();
@@ -31,14 +32,12 @@ function App() {
     if (!token) {
         return <MDBContainer>
             <MDBRow>
-                <BrowserRouter>
-                    <Nav role="navigation" setToken={setToken} loginToken={token}/>
-                    <Routes>
-                        <Route path="/" element={<Login setToken={setToken} setUser={setUser}/>}/>
-                        <Route path="/registration" element={<Registration/>}/>
-                        <Route path="/login" element={<Login setToken={setToken} setUser={setUser}/>}/>
-                    </Routes>
-                </BrowserRouter>
+                <Nav role="navigation" setToken={setToken} loginToken={token}/>
+                <Routes>
+                    <Route path="/" element={<Login setToken={setToken} setUser={setUser}/>}/>
+                    <Route path="/registration" element={<Registration/>}/>
+                    <Route path="/login" element={<Login setToken={setToken} setUser={setUser}/>}/>
+                </Routes>
             </MDBRow>
 
             <Footer/>
@@ -49,15 +48,15 @@ function App() {
     return (
         <MDBContainer>
             <MDBRow>
-                <BrowserRouter>
-                    <Nav loginToken={token} setToken={setToken} userId={token} isAdmin={isAdmin}/>
-                    <Routes>
-                        <Route path="/" element={<About/>}/>
-                        <Route path="/tasks" element={<Tasks userId={token}/>}/>
-                        {isAdmin&&<Route path="/role" element={<Role user={user} setUser={setUser}/>}/>}
-                        {isAdmin&&<Route path="/project" element={<Project/>}/>}
-                    </Routes>
-                </BrowserRouter>
+                <Nav loginToken={token} setToken={setToken} userId={token} isAdmin={isAdmin}/>
+                <Routes>
+                    <Route path="/" element={<About/>}/>
+                    <Route path="/tasks" element={<Tasks userId={token}/>}/>
+                    {isAdmin&&<Route path="/role" element={<Role user={user} setUser={setUser}/>}/>}
+                    {isAdmin&&<Route path="/project" element={<Project/>}/>}
+                    <Route path="/createTask" element={<CreateTask userId={token}/>}/>
+                    <Route path="/calendar" element={<MyCalendar userId={token}/>}/>
+                </Routes>
             </MDBRow>
 
             <Footer/>
