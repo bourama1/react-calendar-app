@@ -25,10 +25,11 @@ router.post("/api/user/create", async (req, res)=> {
 
 router.post("/api/login", async (req, res) => {
     const foundUser = await User.findByCredentials(req.body);
-    req.session.user_id = foundUser._id;
     if (!foundUser) {
+        res.send({message: "Login error"});
         return;
     }
+    req.session.user_id = foundUser._id;
     res.send({
         user: foundUser,
     });
