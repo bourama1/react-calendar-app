@@ -29,7 +29,7 @@ const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json()); // for parsing application/json
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "client", "build")));
 
 // eslint-disable-next-line no-undef
 sessionConfiguration = {
@@ -49,8 +49,8 @@ app.use(userRouter);
 app.use(taskRouter);
 app.use(projectRouter);
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 app.listen(port, () => {
