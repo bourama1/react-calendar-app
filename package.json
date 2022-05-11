@@ -67,5 +67,8 @@
   "overrides": {
     "autoprefixer": "10.4.5"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001",
+  "engines": {
+    "node": "16.x"
+  }
 }
