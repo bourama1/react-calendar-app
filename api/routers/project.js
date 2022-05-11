@@ -2,6 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const User = require("../models/user");
 const Project = require("../models/project");
+const Task = require("../models/task");
 const authenticate = require("../middleware/authenticate");
 
 
@@ -50,6 +51,21 @@ router.patch("/api/projects/:id/update", authenticate, async (req, res) => {
 
 router.get("/api/projects", authenticate, (req, res)=>{
     Project.find({}).then((projects)=> res.send(projects));
+});
+
+router.post("/api/projects/:id/delete", authenticate, async (req, res) => {
+    const searchData = {_id: req.params.id};
+    try {
+        const project = await Project.findOneAndDelete(searchData);
+        res.send({message: "Project deleted"});
+        await Task.deleteMany({project: project._id});
+
+        if (!project) {
+            return res.status(404).send();
+        }
+    } catch (e) {
+        res.status(500).send();
+    }
 });
 
 module.exports = router;

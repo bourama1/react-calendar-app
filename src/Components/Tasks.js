@@ -164,7 +164,7 @@ const TaskTable = ({tasks, handleUpdate, handleDelete, projects})=>{
                 </tr>
             </MDBTableHead>
             <MDBTableBody>
-                {tasks&&projects&&tasks.map((task)=><Task key={task.id} task={task}/>)}
+                {tasks&&projects&&tasks.map((task)=><Task key={task._id} task={task}/>)}
             </MDBTableBody>
         </MDBTable>
     );
