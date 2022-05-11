@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-key */
 import React, {useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
 import {MDBBtn, MDBCardBody, MDBCardTitle} from "mdb-react-ui-kit";
 
 const Role = () => {
@@ -10,6 +11,7 @@ const Role = () => {
     const [user, setUser] = useState();
     const [project, setProject] = useState();
     const [action, setAction] = useState();
+    const {handleSubmit, reset} = useForm();
 
 
     useEffect( ()=>{
@@ -30,42 +32,45 @@ const Role = () => {
     }, [user, action]);
 
 
-    const handleSubmit = async ()=> {
+    const onSubmit = async ()=> {
         if (!user || !project) {
             return;
         }
 
-        await fetch(`/api/projects/${project}/update`, {
+        const response = await fetch(`/api/projects/${project}/update`, {
             method: "PATCH",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({user, action: action}),
         });
+        alert((await response.json()).message);
+        reset();
     };
 
 
     return (
         <MDBCardBody className={"page-center"}>
             <MDBCardTitle color="mdb-color darken-2">Manage users on project</MDBCardTitle>
-            <label>User name: </label>
-            <select onChange={(e) => {
-                setUser(e.target.value);
-            }}>
-                <option value={""}></option>
-                {users&&users.map((user)=><option value={user._id}>{user.name}</option>)}
-            </select> <br></br>
-            <label>Project: </label>
-            <select onChange={(e)=> setProject(e.target.value)}>
-                <option value={""}></option>
-                {availableProjects&&availableProjects.map((project)=><option value={project._id}>{project.name}</option>)}
-            </select> <br></br>
-            <label>Action: </label>
-            <select onChange={(e)=> setAction(e.target.value)}>
-                <option value={""}></option>
-                <option value={"Add"}>Add</option>
-                <option value={"Remove"}>Del</option>
-            </select> <br></br>
-
-            <MDBBtn onClick={handleSubmit}>Submit</MDBBtn>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <label>User name: </label>
+                <select onChange={(e) => {
+                    setUser(e.target.value);
+                }}>
+                    <option value={""}></option>
+                    {users&&users.map((user)=><option value={user._id}>{user.name}</option>)}
+                </select> <br></br>
+                <label>Project: </label>
+                <select onChange={(e)=> setProject(e.target.value)}>
+                    <option value={""}></option>
+                    {availableProjects&&availableProjects.map((project)=><option value={project._id}>{project.name}</option>)}
+                </select> <br></br>
+                <label>Action: </label>
+                <select onChange={(e)=> setAction(e.target.value)}>
+                    <option value={""}></option>
+                    <option value={"Add"}>Add</option>
+                    <option value={"Remove"}>Del</option>
+                </select> <br></br>
+                <MDBBtn onClick={handleSubmit}>Submit</MDBBtn>
+            </form>
         </MDBCardBody>
     );
 };

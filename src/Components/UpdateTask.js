@@ -47,7 +47,7 @@ export default function UpdateTask({isModalOpen, onClose, onSubmit, task}) {
 
     return (
         <MDBCardBody>
-            <MDBCardTitle>Update task: {editedTask.name}</MDBCardTitle>
+            <MDBCardTitle>Update task: {editedTask.title}</MDBCardTitle>
             <form onChange={handleChange} onSubmit={onUpdateSubmit}>
                 <label>Change importance: </label>
                 <select type={"text"} value={editedTask.importance} {...register("importance")}>

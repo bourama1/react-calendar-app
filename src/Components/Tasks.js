@@ -69,7 +69,7 @@ const Tasks = ({userId}) => {
 
         let filteredTasks = tasks;
 
-        filteredTasks = criteria.taskName?filteredTasks.filter((task)=> task.name.includes(criteria.taskName)):filteredTasks;
+        filteredTasks = criteria.taskTitle?filteredTasks.filter((task)=> task.title.includes(criteria.taskTitle)):filteredTasks;
         filteredTasks = criteria.importance?filteredTasks.filter((task)=> task.importance.includes(criteria.importance)):filteredTasks;
         filteredTasks = criteria.hideDone?filteredTasks.filter((task)=> task.isCompleted==="false"):filteredTasks;
         setFilteredTasks(filteredTasks);
@@ -87,12 +87,12 @@ const Tasks = ({userId}) => {
 };
 
 const TaskFilter = ({onSearch}) => {
-    const [taskName, setTaskName] = useState("");
+    const [taskTitle, setTaskTitle] = useState("");
     const [importance, setImportance] = useState("");
     const [hideDone, setHideDone] = useState(false);
 
     const handleSearch =()=>{
-        onSearch({taskName, importance, hideDone});
+        onSearch({taskTitle, importance, hideDone});
     };
 
 
@@ -100,7 +100,7 @@ const TaskFilter = ({onSearch}) => {
         <MDBCardBody className={"task-search"}>
             <MDBCol>
                 <label>Task name: </label>
-                <Input type={"text"} name={"taskName"} value={taskName} onChange={(e)=> setTaskName(e.target.value)}/>
+                <Input type={"text"} name={"taskTitle"} value={taskTitle} onChange={(e)=> setTaskTitle(e.target.value)}/>
                 <label>Importance: </label>
                 <select type={"text"} name={"taskImportance"} value={importance} onChange={(e)=> setImportance(e.target.value)}>
                     <option value=""></option>
@@ -125,7 +125,7 @@ const TaskTable = ({tasks, handleUpdate, handleDelete, projects})=>{
         return (
             <tr key={task._id}>
                 <td>
-                    {task.name}
+                    {task.title}
                 </td>
                 <td>
                     {task.importance}

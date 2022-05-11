@@ -52,9 +52,9 @@ const CreateTask = ({userId}) =>{
             <MDBCardBody className={"registration"}>
                 <MDBCardTitle>Create task</MDBCardTitle>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <label>Task name: </label>
-                    <Input placeholder={"Name"} {...register("name", {required: true})} />
-                    {errors.name?.type==="required"&&<MDBCol className={"validation-message"}>Name is required</MDBCol>}
+                    <label>Task title: </label>
+                    <Input placeholder={"Title"} {...register("title", {required: true})} />
+                    {errors.title?.type==="required"&&<MDBCol className={"validation-message"}>Title is required</MDBCol>}
                     <label>For project: </label>
                     <select type={"text"} {...register("project", {required: true})}>
                         <option value={""}> </option>

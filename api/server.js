@@ -9,8 +9,20 @@ const cors = require("cors");
 const path = require("path");
 
 // Mongoose initialization
-mongoose.connect("mongodb://localhost:27017/owe");
-console.log("DB initialize");
+const options = {
+    useNewUrlParser: true,
+};
+
+const uri = "mongodb+srv://bourama1:test1234@cluster0.dyzxn.mongodb.net/owe?retryWrites=true&w=majority";
+
+mongoose.connect(uri, options).then(
+    () => {
+        console.log("MongoDB Connection Succeeded.");
+    },
+    (err) => {
+        console.log(err);
+    },
+);
 
 const app = express();
 const port = process.env.PORT || 3001;
