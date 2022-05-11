@@ -110,7 +110,7 @@ const TaskFilter = ({onSearch}) => {
                     <option value="D">D </option>
                 </select>
                 <label>Hide done: </label>
-                <input type={"checkbox"} name={"hideDone"} value={hideDone} onChange={(e)=> {
+                <input type={"checkbox"} name={"hideDone"} value={hideDone} onChange={()=> {
                     setHideDone(!hideDone);
                 }}/>
             </MDBCol>

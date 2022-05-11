@@ -11,7 +11,7 @@ import {
     MDBBtn,
 } from "mdb-react-ui-kit";
 
-const Nav = ({setToken, loginToken, userId, isAdmin})=> {
+const Nav = ({setToken, loginToken, isAdmin})=> {
     const navigate = useNavigate();
 
     return (

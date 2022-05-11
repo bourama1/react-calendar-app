@@ -14,7 +14,7 @@ border-radius: 4px;
 box-sizing: border-box;
 `;
 
-export default function UpdateTask({isModalOpen, onClose, onSubmit, task}) {
+export default function UpdateTask({onClose, onSubmit, task}) {
     const [editedTask, setEditedTask] = useState(task);
     const {register, handleSubmit, formState: {errors}, reset} = useForm();
 
