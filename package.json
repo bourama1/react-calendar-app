@@ -37,8 +37,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start": "node ./api/server.js",
-    "heroku-postbuild": "npm install && npm run build"
+    "server": "node ./api/server.js",
+    "heroku-postbuild": "npm install && npm run build",
+    "develop": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "eslintConfig": {
     "extends": [
